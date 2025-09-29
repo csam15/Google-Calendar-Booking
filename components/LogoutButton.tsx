@@ -15,10 +15,10 @@ export default function LogoutButton() {
   };
 
   return (
-    <div className="fixed top-5 right-5">
+    <div>
       <button
         onClick={handleLogout}
-        className="fixed right-5 top-5 rounded-xl border-1 p-2 hover:bg-red-300 cursor-pointer"
+        className=" rounded-xl border-1 p-2 hover:bg-red-900 cursor-pointer"
       >
         <LogOut className="size-8" />
       </button>

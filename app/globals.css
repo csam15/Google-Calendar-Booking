@@ -18,9 +18,12 @@
     @apply text-red-500 text-sm mt-1;
   }
   .submit-button {
-    @apply bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50 cursor-pointer mt-3;
+    @apply bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50 cursor-pointer;
   }
   .admin-dashboard-container {
     @apply py-6 min-h-fit w-full flex flex-col items-center justify-center px-4;
+  }
+  .full-shadow {
+    @apply shadow-[0_0_6px_rgba(0,0,0,0.5)]
   }
 } 

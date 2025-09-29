@@ -8,12 +8,12 @@ export default function AdminPage() {
         <div className="w-full h-fit flex justify-between items-center border-b-2 border-blue-600 p-4">
           <div className="flex flex-col items-start justify-center">
             <h1 className="font-bold text-2xl md:text-3xl">Admin Dashboard</h1>
-            <p className="text-sm">Welcome, {process.env.ADMIN_EMAIL}</p>
+            <p className="text-sm md:text-lg">Welcome, {process.env.ADMIN_EMAIL}</p>
           </div>
           <LogoutButton />
         </div>
         <div className="admin-dashboard-container">
-          <h1 className="text-2xl font-bold">Appointment management</h1>
+          <h1 className="text-2xl md:text-3xl font-bold py-2">Appointment management</h1>
           <div className="flex flex-col items-center justify-center">
             <ShowEvents />
           </div>
