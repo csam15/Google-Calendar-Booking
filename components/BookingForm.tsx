@@ -146,12 +146,12 @@ export default function BookingForm() {
     <div className="flex justify-center items-center">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-2 grid-rows-[1fr_auto] space-x-8"
+        className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-[1fr_auto] place-items-start gap-8"
       >
-        <div className="flex flex-col items-center justify-center gap-4 border rounded-xl p-4">
+        <div className="flex flex-col items-center lg:items-start justify-center gap-2 border rounded-xl p-4 w-full">
           {/* Name Field */}
           <div>
-            <label htmlFor="name" className="block text-sm font-medium mb-1">
+            <label htmlFor="name" className="form-label">
               Name *
             </label>
             <input {...register("name")} id="name" className="form-input" />
@@ -162,7 +162,7 @@ export default function BookingForm() {
 
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-1">
+            <label htmlFor="email" className="form-label">
               Email *
             </label>
             <input
@@ -178,7 +178,7 @@ export default function BookingForm() {
 
           {/* Phone Field */}
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium mb-1">
+            <label htmlFor="phone" className="form-label">
               Phone
             </label>
             <input
@@ -209,7 +209,7 @@ export default function BookingForm() {
 
           {/* Message Field */}
           <div>
-            <label htmlFor="message" className="block text-sm font-medium mb-1">
+            <label htmlFor="message" className="form-label">
               Message
             </label>
             <textarea
@@ -222,10 +222,10 @@ export default function BookingForm() {
           </div>
         </div>
 
-        <div className="border rounded-xl p-4">
+        <div className="border rounded-xl p-4 w-full row-span-2 flex flex-col h-full">
           {/* Date Picker */}
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="form-label">
               Select Date *
             </label>
             <DayPicker
@@ -246,8 +246,8 @@ export default function BookingForm() {
           </div>
 
           {/* Time Slots */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
+          <div className="flex-1 overflow-y-auto">
+            <label className="form-label">
               Available Times *
             </label>
 
@@ -278,7 +278,7 @@ export default function BookingForm() {
                 </p>
               )}
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
               {availableSlots.map((slot, index) => (
                 <label key={index} className="cursor-pointer">
                   <input
@@ -303,7 +303,7 @@ export default function BookingForm() {
           </div>
         </div>
 
-        <div className="col-span-2 flex justify-center items-center py-4">
+        <div className="">
           {/* Submit Button */}
           <button
             type="submit"

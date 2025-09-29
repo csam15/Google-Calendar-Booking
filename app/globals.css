@@ -9,12 +9,15 @@
 
 @layer components {
   .form-input {
-    @apply w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-2xl;
+    @apply w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl;
+  }
+  .form-label {
+    @apply block text-base font-medium mb-1;
   }
   .error-message {
     @apply text-red-500 text-sm mt-1;
   }
   .submit-button {
-    @apply bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50 cursor-pointer mx-auto mt-3;
+    @apply bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50 cursor-pointer mt-3;
   }
 } 
