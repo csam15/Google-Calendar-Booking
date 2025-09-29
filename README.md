@@ -1,6 +1,4 @@
-# Project Title
-
-Google Calendar Booking System
+# Google Calendar Booking System
 
 ## Description
 
