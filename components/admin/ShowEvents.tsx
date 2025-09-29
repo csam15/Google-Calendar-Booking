@@ -3,11 +3,17 @@
 import { Loader } from "lucide-react";
 import { useState } from "react";
 import useSWR, { mutate } from "swr";
+import ConfirmModal from "./ConfirmModal";
+import RescheduleModal from "./rescheduleModal";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function ShowEvents() {
   const [showEvents, setShowEvents] = useState<boolean>(true);
+  const [modalType, setModalType] = useState<"delete" | "reschedule" | null>(
+    null
+  );
+  const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const { data, isLoading, mutate } = useSWR("/api/calendar/events", fetcher, {
     refreshInterval: 120000, // Auto-refresh every 30 seconds
     revalidateOnFocus: true, // Refresh when tab becomes active
@@ -28,9 +34,21 @@ export default function ShowEvents() {
 
     if (res.ok) {
       mutate();
+      setModalType(null);
     } else {
       console.error("Failed to delete event");
     }
+  }
+
+  async function handleReschedule(eventId: string, start: string, end: string) {
+    await fetch("/api/calendar/reschedule", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ eventId, start, end }),
+    });
+    mutate();
+    setModalType(null);
+    setSelectedEvent(null);
   }
 
   return (
@@ -88,20 +106,31 @@ export default function ShowEvents() {
                     })}{" "}
                   </span>
                 </div>
-                <div className="text-left py-3">
-                  {event.attendees?.length && (
-                    <div>
-                      <span className="font-bold">Attendees:</span>{" "}
-                      {event.attendees.join(", ")}
-                    </div>
-                  )}
-                </div>
-                <div>
+
+                {event.attendees?.length && (
+                  <div className="text-left py-2">
+                    <span className="font-bold">Attendees:</span>{" "}
+                    {event.attendees.join(", ")}
+                  </div>
+                )}
+                <div className="pt-2 space-x-2">
                   <button
-                    onClick={() => handleDelete(event.id)}
+                    onClick={() => {
+                      setSelectedEvent(event);
+                      setModalType("delete");
+                    }}
                     className="bg-red-400 text-white px-3 py-1 rounded hover:bg-red-600"
                   >
                     Delete
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSelectedEvent(event);
+                      setModalType("reschedule");
+                    }}
+                    className="bg-gray-400 text-white px-3 py-1 rounded hover:bg-red-600"
+                  >
+                    Reschedule
                   </button>
                 </div>
               </div>
@@ -109,6 +138,27 @@ export default function ShowEvents() {
           </div>
         ) : (
           ""
+        )}
+
+        {/* Modals */}
+        {modalType === "delete" && selectedEvent && (
+          <ConfirmModal
+            isOpen={true}
+            onClose={() => setModalType(null)}
+            onConfirm={() => handleDelete(selectedEvent.id)}
+            eventTitle={selectedEvent.summary}
+          />
+        )}
+
+        {modalType === "reschedule" && selectedEvent && (
+          <RescheduleModal
+            isOpen={true}
+            onClose={() => setModalType(null)}
+            onConfirm={(start, end) =>
+              handleReschedule(selectedEvent.id, start, end)
+            }
+            eventTitle={selectedEvent.summary}
+          />
         )}
       </div>
     </div>
