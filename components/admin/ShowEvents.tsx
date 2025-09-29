@@ -65,7 +65,7 @@ export default function ShowEvents() {
             disabled={isLoading}
             className="submit-button border border-black"
           >
-            {showEvents ? "Show" : "Hide"}
+            {showEvents ? "Hide" : "Show"}
           </button>
         </div>
         {isLoading ? (

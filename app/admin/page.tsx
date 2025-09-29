@@ -1,4 +1,5 @@
 import LogoutButton from "@/components/LogoutButton";
+import BlockOutTimes from "@/components/admin/BlockOutTimes";
 import ShowEvents from "@/components/admin/ShowEvents";
 
 export default function AdminPage() {
@@ -16,6 +17,9 @@ export default function AdminPage() {
           <h1 className="text-2xl md:text-3xl font-bold py-2">Appointment management</h1>
           <div className="flex flex-col items-center justify-center">
             <ShowEvents />
+          </div>
+          <div>
+            <BlockOutTimes />
           </div>
         </div>
         <div className="admin-dashboard-container">
