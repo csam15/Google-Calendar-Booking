@@ -1,13 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  console.log("Environment check:");
-  console.log("ADMIN_EMAIL:", process.env.ADMIN_EMAIL);
-  console.log("ADMIN_PASSWORD:", process.env.ADMIN_PASSWORD);
-
   const { username, password } = await request.json();
-  console.log(username);
-  console.log(password);
 
   if (
     username === process.env.ADMIN_USERNAME &&
