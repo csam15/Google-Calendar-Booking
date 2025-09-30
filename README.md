@@ -1,9 +1,7 @@
 # Google Calendar Booking App
 A web application that allows clients to book meetings directly through a calendar interface while providing admins a password-protected dashboard to manage events and availability.
 
-
-This is strictly for backend implementation in your app, with your specific styling. I am not a graphic designer and spent about 5 minutes working on layouts and form styling.
-
+This is meant as a backend implementation. You can integrate it into your app and customize the styling to match your design.
 ## Features (v1)
 
 ### Client Booking Page
@@ -17,7 +15,26 @@ This is strictly for backend implementation in your app, with your specific styl
 - Cancel or reschedule events
 - Block out unavailable times, including:
   - **All-day events** (vacations, holidays)
-  - **Timed events** (lunch breaks, appointments), with repeat options 
+  - **Timed events** (lunch breaks, appointments), with repeat options
+
+# Installation and Execution
+
+### 1. Fork this repo
+
+### 2. Set up environment variables
+Populate the `env.txt` file with the required keys and tokens.  
+👉 Follow [Google Cloud’s getting started guide](https://developers.google.com/workspace/guides/get-started) for setup details.  
+
+### 3. Generate Google tokens
+Start your dev environment and visit:  http://localhost:3000/api/auth/google-setup
+You’ll be prompted to sign in with your Google account. After signing in, you’ll receive your `GOOGLE_REFRESH_TOKEN` and `GOOGLE_ACCESS_TOKEN`.  
+
+### 4. Add admin credentials
+Set your **admin username** and **password** in the same `env.txt` file.  
+
+### 5. Finalize environment file
+Rename `env.txt` to `.env.local`.  
+This ensures it will be ignored by GitHub and that values can be accessed via `process.env`.  
 
 # Dependencies
 
@@ -58,25 +75,10 @@ This is strictly for backend implementation in your app, with your specific styl
 - `eslint-config-next` – 15.5.4  
 - `@eslint/eslintrc` – ^3
 
-# Installing
-
-* How/where to download your program
-* Any modifications needed to be made to files/folders
-
-### Executing program
-
-* How to run the program
-* Step-by-step bullets
-```
-code blocks for commands
-```
 
 ## Help
 
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
+Please open an issue or contact me with any questions or concerns regarding this project. Constructive criticism is also welcome!
 
 ## Author
 
@@ -91,7 +93,11 @@ craigsampson15@gmail.com
 
 ## License
 
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
+Copyright (C) 2025 Your Name
 
-## Acknowledgments
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
 
