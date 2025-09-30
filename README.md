@@ -4,6 +4,8 @@
 
 A simple web app with a client-facing booking page and a password-protected admin dashboard to manage availability, view upcoming bookings, and more.
 
+This is strictly for backend implementation in your app, with your specific styling. I am not a graphic designer and spent about 5% of this project worrying about UI!
+
 ## Getting Started
 
 ### Dependencies
