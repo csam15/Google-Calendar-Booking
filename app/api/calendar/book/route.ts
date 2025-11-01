@@ -1,15 +1,19 @@
 import { NextResponse } from "next/server";
 import { getCalendarClient } from "@/lib/google";
 import { z } from "zod";
+import { siteConfig } from "@/config/site";
+
+// Dynamically create the enum from config
+const meetingTypeIds = siteConfig.meetingTypes.map((type) => type.id) as [string, ...string[]];
 
 // Match your form schema
 const bookingSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.email("Invalid email"),
   phone: z.string().optional(),
-  meetingType: z.enum(["option1", "option2"]),
+  meetingType: z.enum(meetingTypeIds),
   selectedDate: z.string().min(1, "Date is required"),
-  selectedTime: z.string().min(1, "Time is required"), // Accept any time string
+  selectedTime: z.string().min(1, "Time is required"),
   message: z.string().optional(),
 });
 
@@ -30,35 +34,38 @@ export async function POST(req: Request) {
     } = validatedData;
 
     // Parse the date and time
-    // selectedTime is now an ISO string from the availability API
     const startTime = new Date(selectedTime);
+
+    // Get meeting type details from config
+    const meetingTypeObj = siteConfig.meetingTypes.find(
+      (type) => type.id === meetingType
+    );
+    const duration = meetingTypeObj?.duration || 60;
+    const meetingLabel = meetingTypeObj?.label || meetingType;
 
     // Set end time based on meeting type
     const endTime = new Date(startTime);
-    const duration = meetingType === "option1" ? 60 : 30; // minutes
     endTime.setMinutes(startTime.getMinutes() + duration);
 
     const calendar = getCalendarClient();
 
     // Create the event
     const event = {
-      summary: `${
-        meetingType.charAt(0).toUpperCase() + meetingType.slice(1)
-      } with ${name}`,
+      summary: `${meetingLabel} with ${name}`,
       description: `
-  Meeting Type: ${meetingType}
-  Client: ${name}
-  Email: ${email}
-  ${phone ? `Phone: ${phone}` : ""}
-  ${message ? `\nMessage: ${message}` : ""}
-        `.trim(),
+Meeting Type: ${meetingLabel}
+Client: ${name}
+Email: ${email}
+${phone ? `Phone: ${phone}` : ""}
+${message ? `\nMessage: ${message}` : ""}
+      `.trim(),
       start: {
         dateTime: startTime.toISOString(),
-        timeZone: "America/New_York",
+        timeZone: siteConfig.business.timezone,
       },
       end: {
         dateTime: endTime.toISOString(),
-        timeZone: "America/New_York",
+        timeZone: siteConfig.business.timezone,
       },
       attendees: [{ email: email, displayName: name }],
       reminders: {

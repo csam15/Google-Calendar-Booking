@@ -6,8 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
+import { siteConfig } from "@/config/site";
 
-const meetingType = ["option1", "option2"] as const;
+const meetingType = siteConfig.meetingTypes.map((type) => type.id) as unknown as readonly [string, ...string[]];
 
 const schema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -65,7 +66,10 @@ export default function BookingForm() {
 
     setLoadingSlots(true);
     try {
-      const duration = watchedMeetingType === "option1" ? 60 : 30;
+      const meetingTypeObj = siteConfig.meetingTypes.find(
+        (type) => type.id === watchedMeetingType
+      );
+      const duration = meetingTypeObj?.duration || 60;
 
       // Use the same local date format
       const year = selected.getFullYear();
@@ -103,7 +107,7 @@ export default function BookingForm() {
       const result = await response.json();
 
       if (response.ok) {
-        alert("Booking confirmed! Check your email for details.");
+        alert(siteConfig.text.booking.successMessage);
         reset();
         setSelected(undefined);
         setAvailableSlots([]);
@@ -146,30 +150,37 @@ export default function BookingForm() {
     <div className="flex justify-center items-center">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-[1fr_auto] place-items-start gap-8"
+        className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-[1fr_auto] place-items-start gap-8"
       >
         <div className="flex flex-col items-center lg:items-start justify-center gap-2 border rounded-xl p-4 w-full">
           {/* Name Field */}
-          <div>
-            <label htmlFor="name" className="form-label">
-              Name *
+
+          <div className="form-field">
+            <label htmlFor="name" className="booking-form-label">
+              {siteConfig.text.booking.nameLabel}*
             </label>
-            <input {...register("name")} id="name" className="form-input" />
+            <input
+              {...register("name")}
+              id="name"
+              className="booking-form-input"
+              placeholder={siteConfig.text.booking.namePlaceholder}
+            />
             {errors.name && (
               <p className="error-message">{errors.name.message}</p>
             )}
           </div>
 
           {/* Email Field */}
-          <div>
-            <label htmlFor="email" className="form-label">
-              Email *
+          <div className="form-field">
+            <label htmlFor="email" className="booking-form-label">
+              {siteConfig.text.booking.emailLabel}*
             </label>
             <input
               {...register("email")}
               type="email"
               id="email"
-              className="form-input"
+              className="booking-form-input"
+              placeholder={siteConfig.text.booking.emailPlaceholder}
             />
             {errors.email && (
               <p className="error-message">{errors.email.message}</p>
@@ -177,15 +188,16 @@ export default function BookingForm() {
           </div>
 
           {/* Phone Field */}
-          <div>
-            <label htmlFor="phone" className="form-label">
-              Phone
+          <div className="form-field">
+            <label htmlFor="phone" className="booking-form-label">
+              {siteConfig.text.booking.phoneLabel}
             </label>
             <input
               {...register("phone")}
               type="tel"
               id="phone"
-              className="form-input"
+              className="booking-form-input"
+              placeholder={siteConfig.text.booking.phonePlaceholder}
             />
             {errors.phone && (
               <p className="error-message">{errors.phone.message}</p>
@@ -193,12 +205,12 @@ export default function BookingForm() {
           </div>
 
           {/* Meeting Type Dropdown */}
-          <div className="flex flex-col items-center justify-center">
-            <select {...register("meetingType")} className="form-input">
-              <option value="">Select meeting type</option>
-              {meetingType.map((type) => (
-                <option key={type} value={type}>
-                  {type.charAt(0).toUpperCase() + type.slice(1)}
+          <div className="flex flex-col items-center justify-center form-field">
+            <select {...register("meetingType")} className="booking-form-input !text-sm">
+              <option value="">{siteConfig.text.booking.meetingTypeLabel}*</option>
+              {siteConfig.meetingTypes.map((type) => (
+                <option key={type.id} value={type.id}>
+                  {type.label}
                 </option>
               ))}
             </select>
@@ -208,16 +220,16 @@ export default function BookingForm() {
           </div>
 
           {/* Message Field */}
-          <div>
-            <label htmlFor="message" className="form-label">
-              Message
+          <div className="form-field">
+            <label htmlFor="message" className="booking-form-label">
+              {siteConfig.text.booking.messageLabel}
             </label>
             <textarea
               {...register("message")}
               id="message"
               rows={4}
-              className="form-input"
-              placeholder="Please provide topics for discussion..."
+              className="booking-form-input"
+              placeholder={siteConfig.text.booking.messagePlaceholder}
             />
           </div>
         </div>
@@ -225,8 +237,8 @@ export default function BookingForm() {
         <div className="border rounded-xl p-4 w-full row-span-2 flex flex-col h-full">
           {/* Date Picker */}
           <div>
-            <label className="form-label">
-              Select Date *
+            <label className="booking-form-label">
+              {siteConfig.text.booking.dateLabel} *
             </label>
             <DayPicker
               mode="single"
@@ -234,6 +246,7 @@ export default function BookingForm() {
               selected={selected}
               onSelect={handleDateSelect}
               disabled={{ before: new Date() }}
+              className="text-[14px]"
             />
             <input
               type="hidden"
@@ -247,24 +260,24 @@ export default function BookingForm() {
 
           {/* Time Slots */}
           <div className="flex-1 overflow-y-auto">
-            <label className="form-label">
-              Available Times *
+            <label className="booking-form-label">
+              {siteConfig.text.booking.timeLabel} *
             </label>
 
             {!selected && (
-              <p className="text-gray-500 text-sm mb-2">
-                Please select a date first
+              <p className="text-muted text-sm mb-2">
+                {siteConfig.text.booking.selectDateFirst}
               </p>
             )}
 
             {selected && !watchedMeetingType && (
-              <p className="text-gray-500 text-sm mb-2">
+              <p className="text-muted text-sm mb-2">
                 Please select a meeting type first
               </p>
             )}
 
             {loadingSlots && (
-              <p className="text-blue-500 text-sm mb-2">
+              <p className="loading-text">
                 Loading available times...
               </p>
             )}
@@ -273,8 +286,8 @@ export default function BookingForm() {
               watchedMeetingType &&
               !loadingSlots &&
               availableSlots.length === 0 && (
-                <p className="text-red-500 text-sm mb-2">
-                  No available times for this date
+                <p className="error-message">
+                  {siteConfig.text.booking.noTimesAvailable}
                 </p>
               )}
 
@@ -286,12 +299,9 @@ export default function BookingForm() {
                     type="radio"
                     value={slot.start}
                     className="hidden peer"
-                    disabled={!selected}
+                    disabled={Boolean(!selected)}
                   />
-                  <div
-                    className="form-input text-center peer-checked:bg-blue-500 peer-checked:text-white
-                    hover:bg-blue-100 disabled:opacity-50"
-                  >
+                  <div className="time-slot-clickable peer-checked:bg-[var(--color-primary)] peer-checked:text-white">
                     {formatTimeSlot(slot)}
                   </div>
                 </label>
@@ -310,13 +320,11 @@ export default function BookingForm() {
             disabled={
               isSubmitting ||
               !isValid ||
-              (selected && watchedMeetingType && availableSlots.length === 0)
+              Boolean(selected && watchedMeetingType && availableSlots.length === 0)
             }
-            className={`submit-button ${
-              isValid ? "" : "hover:bg-red-500"
-            } text-2xl`}
+            className="submit-button"
           >
-            {isSubmitting ? "Booking..." : "Book Appointment"}
+            {isSubmitting ? siteConfig.text.booking.submittingButton : siteConfig.text.booking.submitButton}
           </button>
         </div>
       </form>

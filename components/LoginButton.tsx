@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function LoginButton() {
   return (
-    <div className="rounded-xl border-1 p-2 hover:bg-blue-300 cursor-pointer">
+    <div className="login-button">
       <Link href="/login">
         <LogIn className="size-8" />
       </Link>

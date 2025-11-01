@@ -5,6 +5,7 @@ import { useState } from "react";
 import useSWR, { mutate } from "swr";
 import ConfirmModal from "./ConfirmModal";
 import RescheduleModal from "./rescheduleModal";
+import { siteConfig } from "@/config/site";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -15,7 +16,7 @@ export default function ShowEvents() {
   );
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const { data, isLoading, mutate } = useSWR("/api/calendar/events", fetcher, {
-    refreshInterval: 120000, // Auto-refresh every 30 seconds
+    refreshInterval: siteConfig.calendar.autoRefreshInterval,
     revalidateOnFocus: true, // Refresh when tab becomes active
   });
 
@@ -52,14 +53,14 @@ export default function ShowEvents() {
   }
 
   return (
-    <div className="p-4 rounded-xl border bg-blue-300 my-3 max-w-lg">
+    <div className="events-container">
       <div>
         <div
           className={`flex items-center justify-between w-full ${
             showEvents ? "pb-4" : ""
           } gap-8`}
         >
-          <h1 className="text-xl text-black">Events in the next 7 Days</h1>
+          <h1 className="text-xl text-black">{siteConfig.text.admin.eventsTitle}</h1>
           <button
             onClick={handleClick}
             disabled={isLoading}
@@ -74,67 +75,68 @@ export default function ShowEvents() {
           </div>
         ) : showEvents ? (
           <div className="space-y-2">
-            {events.map((event: any) => (
-              <div
-                key={event.id}
-                className="text-white p-2 rounded-xl text-center full-shadow bg-blue-600"
-              >
-                <div className="font-semibold text-xl">{event.summary}</div>
-                <div className="grid grid-cols-[auto_1fr] grid-rows-3 place-items-start space-x-4">
-                  <span>Date:</span>
-                  <span>
-                    {new Date(event.start).toLocaleDateString("en-US", {
-                      weekday: "long",
-                      month: "long",
-                      day: "numeric",
-                    })}{" "}
-                  </span>
-                  <span>From:</span>
-                  <span>
-                    {new Date(event.start).toLocaleTimeString("en-US", {
-                      hour: "numeric",
-                      minute: "2-digit",
-                      hour12: true,
-                    })}{" "}
-                  </span>
-                  <span>To:</span>
-                  <span>
-                    {new Date(event.end).toLocaleTimeString("en-US", {
-                      hour: "numeric",
-                      minute: "2-digit",
-                      hour12: true,
-                    })}{" "}
-                  </span>
-                </div>
-
-                {event.attendees?.length && (
-                  <div className="text-left py-2">
-                    <span className="font-bold">Attendees:</span>{" "}
-                    {event.attendees.join(", ")}
+            {events.length === 0 ? (
+              <p className="text-muted">{siteConfig.text.admin.noEventsMessage}</p>
+            ) : (
+              events.map((event: any) => (
+                <div key={event.id} className="event-item">
+                  <div className="font-semibold text-xl">{event.summary}</div>
+                  <div className="grid grid-cols-[auto_1fr] grid-rows-3 place-items-start space-x-4">
+                    <span>Date:</span>
+                    <span>
+                      {new Date(event.start).toLocaleDateString("en-US", {
+                        weekday: "long",
+                        month: "long",
+                        day: "numeric",
+                      })}{" "}
+                    </span>
+                    <span>From:</span>
+                    <span>
+                      {new Date(event.start).toLocaleTimeString("en-US", {
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true,
+                      })}{" "}
+                    </span>
+                    <span>To:</span>
+                    <span>
+                      {new Date(event.end).toLocaleTimeString("en-US", {
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true,
+                      })}{" "}
+                    </span>
                   </div>
-                )}
-                <div className="pt-2 space-x-2">
-                  <button
-                    onClick={() => {
-                      setSelectedEvent(event);
-                      setModalType("delete");
-                    }}
-                    className="bg-red-400 text-white px-3 py-1 rounded hover:bg-red-600"
-                  >
-                    Delete
-                  </button>
-                  <button
-                    onClick={() => {
-                      setSelectedEvent(event);
-                      setModalType("reschedule");
-                    }}
-                    className="bg-gray-400 text-white px-3 py-1 rounded hover:bg-red-600"
-                  >
-                    Reschedule
-                  </button>
+
+                  {event.attendees?.length && (
+                    <div className="text-left py-2">
+                      <span className="font-bold">Attendees:</span>{" "}
+                      {event.attendees.join(", ")}
+                    </div>
+                  )}
+                  <div className="pt-2 space-x-2">
+                    <button
+                      onClick={() => {
+                        setSelectedEvent(event);
+                        setModalType("delete");
+                      }}
+                      className="danger-button"
+                    >
+                      {siteConfig.text.admin.deleteButton}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSelectedEvent(event);
+                        setModalType("reschedule");
+                      }}
+                      className="secondary-button"
+                    >
+                      {siteConfig.text.admin.rescheduleButton}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         ) : (
           ""

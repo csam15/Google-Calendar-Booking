@@ -5,25 +5,201 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /*
+   * BRAND COLORS - Edit these to customize your app's look
+   * Change the color values to match your brand
+   */
+
+  /* Primary brand color (buttons, links, accents) */
+  --color-primary-light: rgb(147 197 253);  /* blue-300 */
+  --color-primary: rgb(59 130 246);         /* blue-500 */
+  --color-primary-dark: rgb(37 99 235);     /* blue-600 */
+
+  /* Danger/delete actions */
+  --color-danger-light: rgb(248 113 113);   /* red-400 */
+  --color-danger: rgb(239 68 68);           /* red-500 */
+  --color-danger-dark: rgb(220 38 38);      /* red-600 */
+
+  /* Success/confirmation */
+  --color-success-light: rgb(74 222 128);   /* green-400 */
+  --color-success: rgb(34 197 94);          /* green-500 */
+  --color-success-dark: rgb(22 163 74);     /* green-600 */
+
+  /* Neutral/UI colors */
+  --color-border: rgb(209 213 219);         /* gray-300 */
+  --color-text-muted: rgb(107 114 128);     /* gray-500 */
 }
 
 @layer components {
-  .form-input {
-    @apply w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl;
+  /* Form inputs */
+  .booking-form-input {
+    @apply w-full border py-2 px-3 rounded focus:outline-none focus:ring-2 text-[12px];
+    border-color: var(--color-border);
+    &:focus {
+      border-color: var(--color-primary);
+      --tw-ring-color: var(--color-primary);
+    }
   }
-  .form-label {
-    @apply block text-base font-medium mb-1;
+
+  .booking-form-label {
+    @apply block text-[14px] font-medium mb-1 pt-1;
   }
+
+  .form-field{
+    @apply w-full;
+  }
+
+  /* Messages and text */
   .error-message {
-    @apply text-red-500 text-sm mt-1;
+    @apply text-sm mt-1;
+    color: var(--color-danger);
   }
+
+  .text-muted {
+    color: var(--color-text-muted);
+  }
+
+  .text-primary {
+    color: var(--color-primary);
+  }
+
+  .loading-text {
+    @apply text-sm mb-2;
+    color: var(--color-primary);
+  }
+
+  /* Buttons */
   .submit-button {
-    @apply bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50 cursor-pointer;
+    @apply text-white py-2 px-4 rounded-lg text-xl disabled:opacity-50 cursor-pointer;
+    background-color: var(--color-primary);
+    &:hover:not(:disabled) {
+      background-color: var(--color-primary-dark);
+    }
   }
+
+  .primary-button {
+    @apply text-white px-4 py-2 rounded disabled:opacity-50 cursor-pointer font-medium;
+    background-color: var(--color-primary);
+    &:hover:not(:disabled) {
+      background-color: var(--color-primary-dark);
+    }
+  }
+
+  .danger-button {
+    @apply text-white px-3 py-1 rounded text-sm font-medium;
+    background-color: var(--color-danger);
+    &:hover {
+      background-color: var(--color-danger-dark);
+    }
+  }
+
+  .success-button {
+    @apply text-white px-3 py-1 rounded text-sm font-medium;
+    background-color: var(--color-success);
+    &:hover {
+      background-color: var(--color-success-dark);
+    }
+  }
+
+  .secondary-button {
+    @apply text-white px-3 py-1 rounded text-sm font-medium;
+    background-color: var(--color-text-muted);
+    &:hover {
+      background-color: var(--color-primary-dark);
+    }
+  }
+
+  .logout-button {
+    @apply rounded-xl border p-2 cursor-pointer;
+    &:hover {
+      background-color: var(--color-danger-dark);
+      color: white;
+    }
+  }
+
+  .login-button {
+    @apply rounded-xl border p-2 cursor-pointer;
+    &:hover {
+      background-color: var(--color-primary-light);
+    }
+  }
+
+  /* Time slot selector */
+  .time-slot {
+    @apply w-full border p-2 rounded focus:outline-none text-xl text-center cursor-pointer transition-colors;
+    border-color: var(--color-border);
+    &:hover {
+      background-color: var(--color-primary-light);
+    }
+  }
+
+  /* For use with peer pattern (hidden radio + label) */
+  .time-slot-label {
+    @apply w-full border p-2 rounded text-xl text-center cursor-pointer transition-colors;
+    border-color: var(--color-border);
+
+    &:has(input:checked) {
+      background-color: var(--color-primary);
+      color: white;
+    }
+
+    &:hover {
+      background-color: var(--color-primary-light);
+    }
+  }
+
+  /* Peer-based time slot (works with hidden peer radio) */
+  input.hidden:checked ~ .time-slot-clickable {
+    background-color: var(--color-primary);
+    color: white;
+  }
+
+  .time-slot-clickable {
+    @apply w-full border p-2 rounded text-xl text-center transition-colors;
+    border-color: var(--color-border);
+    &:hover {
+      background-color: var(--color-primary-light);
+    }
+  }
+
+  /* Admin dashboard */
+  .admin-header {
+    border-color: var(--color-primary-dark);
+  }
+
   .admin-dashboard-container {
     @apply py-6 min-h-fit w-full flex flex-col items-center justify-center px-4;
   }
-  .full-shadow {
-    @apply shadow-[0_0_6px_rgba(0,0,0,0.5)]
+
+  .admin-section-title {
+    @apply text-2xl font-bold mb-4;
   }
-} 
+
+  .admin-card {
+    @apply border rounded-lg p-6 w-full max-w-4xl;
+    border-color: var(--color-border);
+  }
+
+  .event-card {
+    @apply border rounded-lg p-4 w-full;
+    border-color: var(--color-border);
+  }
+
+  .events-container {
+    @apply p-4 rounded-xl border my-3 max-w-lg;
+    background-color: var(--color-primary-light);
+    border-color: var(--color-border);
+  }
+
+  .event-item {
+    @apply text-white p-2 rounded-xl text-center;
+    background-color: var(--color-primary-dark);
+  }
+}
+
+@layer utilities {
+  .full-shadow {
+    @apply shadow-[0_0_6px_rgba(0,0,0,0.5)];
+  }
+}

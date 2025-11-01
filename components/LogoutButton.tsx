@@ -18,7 +18,7 @@ export default function LogoutButton() {
     <div>
       <button
         onClick={handleLogout}
-        className=" rounded-xl border-1 p-2 hover:bg-red-900 cursor-pointer"
+        className="logout-button"
       >
         <LogOut className="size-8" />
       </button>

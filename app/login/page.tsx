@@ -1,6 +1,7 @@
 "use client";
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { siteConfig } from "@/config/site";
 
 export default function Login() {
   const [credentials, setCredentials] = useState({
@@ -31,7 +32,7 @@ export default function Login() {
         // Redirect to admin page on successful login
         router.push("/admin");
       } else {
-        setError(data.error || "Login failed");
+        setError(data.error || siteConfig.text.login.errorMessage);
       }
     } catch (error) {
       setError("Network error. Please try again.");
@@ -46,29 +47,35 @@ export default function Login() {
         onSubmit={handleLogin}
         className="flex flex-col gap-3 border rounded-xl p-4"
       >
-        <h1 className="text-4xl text-center">Admin Login</h1>
-        <input
-          type="text"
-          placeholder="Username"
-          value={credentials.username}
-          onChange={(e) =>
-            setCredentials({ ...credentials, username: e.target.value })
-          }
-          className="form-input"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={credentials.password}
-          onChange={(e) =>
-            setCredentials({ ...credentials, password: e.target.value })
-          }
-          className="form-input"
-        />
+        <h1 className="text-4xl text-center">{siteConfig.text.login.pageTitle}</h1>
+        <div>
+          <label className="booking-form-label">{siteConfig.text.login.usernameLabel}</label>
+          <input
+            type="text"
+            placeholder={siteConfig.text.login.usernamePlaceholder}
+            value={credentials.username}
+            onChange={(e) =>
+              setCredentials({ ...credentials, username: e.target.value })
+            }
+            className="booking-form-input"
+          />
+        </div>
+        <div>
+          <label className="booking-form-label">{siteConfig.text.login.passwordLabel}</label>
+          <input
+            type="password"
+            placeholder={siteConfig.text.login.passwordPlaceholder}
+            value={credentials.password}
+            onChange={(e) =>
+              setCredentials({ ...credentials, password: e.target.value })
+            }
+            className="booking-form-input"
+          />
+        </div>
         <button type="submit" disabled={isLoading} className="submit-button">
-          {isLoading ? "Logging in..." : "Login"}
+          {isLoading ? siteConfig.text.login.submittingButton : siteConfig.text.login.submitButton}
         </button>
-        {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="error-message">{error}</p>}
       </form>
     </div>
   );
