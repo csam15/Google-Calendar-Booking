@@ -7,8 +7,11 @@ import { z } from "zod";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 import { siteConfig } from "@/config/site";
+import BookingConfirmation from "./BookingConfirmation";
 
-const meetingType = siteConfig.meetingTypes.map((type) => type.id) as unknown as readonly [string, ...string[]];
+const meetingType = siteConfig.meetingTypes.map(
+  (type) => type.id
+) as unknown as readonly [string, ...string[]];
 
 const schema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -38,6 +41,8 @@ export default function BookingForm() {
   const [selected, setSelected] = useState<Date>();
   const [availableSlots, setAvailableSlots] = useState<AvailableSlot[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(false);
+  const [bookingData, setBookingData] = useState<FormData | null>(null);
 
   const {
     register,
@@ -107,7 +112,8 @@ export default function BookingForm() {
       const result = await response.json();
 
       if (response.ok) {
-        alert(siteConfig.text.booking.successMessage);
+        setBookingData(data);
+        setIsConfirmed(true);
         reset();
         setSelected(undefined);
         setAvailableSlots([]);
@@ -129,7 +135,6 @@ export default function BookingForm() {
       const day = String(date.getDate()).padStart(2, "0");
       const localDateStr = `${year}-${month}-${day}`;
 
-
       setValue("selectedDate", localDateStr);
     } else {
       setValue("selectedDate", "");
@@ -147,7 +152,20 @@ export default function BookingForm() {
   };
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="relative flex justify-center items-center">
+      {isConfirmed && bookingData && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <BookingConfirmation
+            date={bookingData.selectedDate}
+            time={bookingData.selectedTime}
+            meetingType={bookingData.meetingType}
+            name={bookingData.name}
+            email={bookingData.email}
+            phone={bookingData.phone}
+            message={bookingData.message}
+          />
+        </div>
+      )}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-[1fr_auto] place-items-start gap-8"
@@ -206,8 +224,13 @@ export default function BookingForm() {
 
           {/* Meeting Type Dropdown */}
           <div className="flex flex-col items-center justify-center form-field">
-            <select {...register("meetingType")} className="booking-form-input !text-sm">
-              <option value="">{siteConfig.text.booking.meetingTypeLabel}*</option>
+            <select
+              {...register("meetingType")}
+              className="booking-form-input !text-sm"
+            >
+              <option value="">
+                {siteConfig.text.booking.meetingTypeLabel}*
+              </option>
               {siteConfig.meetingTypes.map((type) => (
                 <option key={type.id} value={type.id}>
                   {type.label}
@@ -277,9 +300,7 @@ export default function BookingForm() {
             )}
 
             {loadingSlots && (
-              <p className="loading-text">
-                Loading available times...
-              </p>
+              <p className="loading-text">Loading available times...</p>
             )}
 
             {selected &&
@@ -320,11 +341,15 @@ export default function BookingForm() {
             disabled={
               isSubmitting ||
               !isValid ||
-              Boolean(selected && watchedMeetingType && availableSlots.length === 0)
+              Boolean(
+                selected && watchedMeetingType && availableSlots.length === 0
+              )
             }
             className="submit-button"
           >
-            {isSubmitting ? siteConfig.text.booking.submittingButton : siteConfig.text.booking.submitButton}
+            {isSubmitting
+              ? siteConfig.text.booking.submittingButton
+              : siteConfig.text.booking.submitButton}
           </button>
         </div>
       </form>
