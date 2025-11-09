@@ -163,6 +163,7 @@ export default function BookingForm() {
             email={bookingData.email}
             phone={bookingData.phone}
             message={bookingData.message}
+            onClose={() => setIsConfirmed(false)}
           />
         </div>
       )}

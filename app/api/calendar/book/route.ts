@@ -4,7 +4,10 @@ import { z } from "zod";
 import { siteConfig } from "@/config/site";
 
 // Dynamically create the enum from config
-const meetingTypeIds = siteConfig.meetingTypes.map((type) => type.id) as [string, ...string[]];
+const meetingTypeIds = siteConfig.meetingTypes.map((type) => type.id) as [
+  string,
+  ...string[]
+];
 
 // Match your form schema
 const bookingSchema = z.object({

@@ -10,7 +10,8 @@ export const siteConfig = {
    * SITE BRANDING
    */
   siteName: "Google Calendar Booking",
-  siteDescription: "Book appointments with ease using our Google Calendar integration",
+  siteDescription:
+    "Book appointments with ease using our Google Calendar integration",
 
   /**
    * MEETING TYPES
@@ -69,34 +70,6 @@ export const siteConfig = {
       noTimesAvailable: "No available times for this date.",
       selectDateFirst: "Please select a date first.",
     },
-
-    // Admin dashboard
-    admin: {
-      dashboardTitle: "Admin Dashboard",
-      appointmentManagementTitle: "Appointment Management",
-      businessSettingsTitle: "Business Settings",
-      notificationSettingsTitle: "Notification Settings",
-      placeholderText: "Coming soon...",
-      logoutButton: "Logout",
-      eventsTitle: "Upcoming Appointments (Next 7 Days)",
-      noEventsMessage: "No upcoming appointments.",
-      deleteButton: "Delete",
-      rescheduleButton: "Reschedule",
-      blockTimeTitle: "Block Out Times",
-      blockTimeDescription: "Mark times as unavailable on your calendar",
-    },
-
-    // Login page
-    login: {
-      pageTitle: "Admin Login",
-      usernameLabel: "Username",
-      usernamePlaceholder: "Enter username",
-      passwordLabel: "Password",
-      passwordPlaceholder: "Enter password",
-      submitButton: "Login",
-      submittingButton: "Logging in...",
-      errorMessage: "Invalid credentials",
-    },
   },
 
   /**
@@ -112,6 +85,14 @@ export const siteConfig = {
 
     // Minimum notice required (in hours)
     minimumNoticeHours: 24,
+
+    // business info
+    businessInfo: {
+      name: "Andrew Finocchiaro", // who am i making an appointment with
+      // if meeting is in person 
+      address: "152 Shiel ave",  
+      city: "Staten Island, NY 10309"
+    },
   },
 
   /**
@@ -129,4 +110,4 @@ export const siteConfig = {
 
 // TypeScript types for autocomplete
 export type SiteConfig = typeof siteConfig;
-export type MeetingType = typeof siteConfig.meetingTypes[0];
+export type MeetingType = (typeof siteConfig.meetingTypes)[0];
